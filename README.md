@@ -1,9 +1,9 @@
-# Nips_challenge
-Project for nips challenge submission
+# NeurIPS_challenge
+Project for NeurIPS challenge submission
 
 # How to Reproduce it
 
-1. Get data
+## Get data
 
 Get dataset through this:
 ```
@@ -17,7 +17,7 @@ cd ./data/source & sh data_prepare.sh
 note: It's not recommanded to do so bacuase it will take a few hours.
 
 
-2. Train
+## Train
 
 ```
 git clone https://github.com/hiyouga/LLaMA-Factory.git
@@ -49,3 +49,6 @@ deepspeed --include localhost:0 --master_port 9090 src/train_bash.py \
     --fp16 \
     --overwrite_output_dir
 ```
+
+## Contact 
+zhang.huanzhiyuan@gmail.com,z441296721@163.com
