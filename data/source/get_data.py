@@ -5,14 +5,14 @@ import os
 
 def list_dict_to_json(input,output_path):
     df = pd.DataFrame(input)
-    #df.to_json(output_path, orient='records', indent=4, force_ascii=False)
+    df.to_json(output_path, orient='records', indent=4, force_ascii=False)
     return
 
 def get_data_from_cnn_dailymail(dataset):
     dataset_formated = []
     print('Reformatting cnn_dailymail...')
 
-    for item in tqdm(dataset['train']):
+    for item in tqdm(dataset):
         dataset_formated.append({
             'instruction':'Summarize the below article in 3 sentences.\n',
             'input':item['article'],
@@ -39,16 +39,28 @@ def get_data_from_lima(dataset):
                 'input':'',
                 'output':output,
                 'history':history,
-                'data_source':item['source']
+                'data_source':'lima/'+item['source']
             })
         else:
             dataset_formated.append({
                 'instruction':instruction,
                 'input':'',
                 'output':output,
-                'data_source':item['source']
+                'data_source':'lima/'+item['source']
             })
 
+    return dataset_formated
+
+def get_data_from_platypus(dataset):
+    dataset_formated = []
+    print('Reformatting open platypus...')
+    for item in dataset:
+        dataset_formated.append({
+            'instruction':item['instruction'],
+            'input':item['input'],
+            'output':item['output'],
+            'data_source':'open_platypus/'+item['data_source']
+        })
     return dataset_formated
 
 def get_data_from_tulu(dataset):
@@ -68,7 +80,7 @@ def get_data_from_tulu(dataset):
             'input':'',
             'output':output,
             'history':history,
-            'data_source':'tulu_'+item['dataset']
+            'data_source':'tulu/'+item['dataset']
         })
     return dataset_formated
 
@@ -81,20 +93,21 @@ def main():
     list_dict_to_json(dataset[:-30],'./source_data/lima.json')
     list_dict_to_json(dataset[-30:],'./source_data/lima_chat.json')
 
-    dataset = load_dataset('cnn_dailymail', '3.0.0')
-    dataset = get_data_from_cnn_dailymail(dataset)[:20000]
-    list_dict_to_json(dataset,'./source_data/cnn_dailymail.json')
+    '''dataset = load_dataset('cnn_dailymail', '3.0.0')
+    dataset = get_data_from_cnn_dailymail(dataset['train'])[:20000]
+    list_dict_to_json(dataset,'./source_data/cnn_dailymail.json')'''
 
     dataset = load_dataset("garage-bAInd/Open-Platypus")
-    list_dict_to_json(dataset['train'],'./source_data/open_platypus.json')
+    dataset = get_data_from_platypus(dataset['train'])
+    list_dict_to_json(dataset,'./source_data/open_platypus.json')
 
 
-    dataset = load_dataset("Rocinante/tulu_v1")
+    '''dataset = load_dataset("Rocinante/tulu_v1")
     tulu = get_data_from_tulu(dataset['train'])
     dataset = load_dataset("Rocinante/tulu_v2")
     tulu += get_data_from_tulu(dataset['train'])
     
-    sources_needed=['tulu_sharegpt','tulu_gpt4_alpaca','tulu_oasst1','tulu_open_orca','tulu_code_alpaca','tulu_dolly']
+    sources_needed=['tulu_sharegpt','tulu_gpt4_alpaca','tulu_oasst1','tulu_open_orca','tulu_code_alpaca','tulu_dolly','tulu_science']
     tulu_subsets={}
     for source in sources_needed:
         tulu_subsets[source]=[]
@@ -110,7 +123,7 @@ def main():
     sources = [item['data_source'] for item in tulu]
     from collections import Counter
     result = Counter(sources)
-    print(result)
+    print(result)'''
 
 main()
 

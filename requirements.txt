@@ -1,5 +1,6 @@
 torch>=1.13.1
 transformers
+deepspeed
 datasets
 accelerate>=0.21.0
 peft>=0.4.0

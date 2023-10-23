@@ -11,11 +11,10 @@ cd ./data & python get_dataset.py
 ```
 
 Or you can go along the procedure of getting the dataset through:  
-It's not recommanded to do so bacuase it will take around 10 hours.
 ```
 cd ./data/source & sh data_prepare.sh
 ```
-note: This part remains unfinished, so don't use it.
+note: It's not recommanded to do so bacuase it will take a few hours.
 
 
 2. Train
