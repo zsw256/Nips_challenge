@@ -25,31 +25,6 @@ note: It's not recommanded to do so bacuase it will take a few hours.
 
 ```
 git clone https://github.com/hiyouga/LLaMA-Factory.git
-cd LLaMA-Factory
-deepspeed --include localhost:0 --master_port 9090 src/train_bash.py \
-    --deepspeed ../configs/ds_config_zero2.json \
-    --stage sft \
-    --model_name_or_path Qwen/Qwen-14B \
-    --use_fast_tokenizer True \
-    --do_train \
-    --dataset_dir ../data/dataset \
-    --dataset tulu_merge \
-    --template default \
-    --max_source_length 1024 \
-    --max_target_length 1024 \
-    --finetuning_type lora \
-    --lora_rank 64 \
-    --lora_target "c_attn","c_proj" \
-    --output_dir ./output/tulu_merge \
-    --overwrite_cache \
-    --per_device_train_batch_size 2 \
-    --gradient_accumulation_steps 2 \
-    --lr_scheduler_type cosine \
-    --logging_steps 10 \
-    --save_steps 10000 \
-    --learning_rate 5e-5 \
-    --num_train_epochs 1.0 \
-    --plot_loss \
-    --fp16 \
-    --overwrite_output_dir
+cd ./LLaMA-Factory/ && git checkout 7de7174 && cd ..
+sh train.sh
 ```
