@@ -38,7 +38,7 @@ model = Qwen(
 if device == 'auto':
     device = 'cuda'
 
-LLAMA2_CONTEXT_LENGTH = 4096
+CONTEXT_LENGTH = 4096
 
 
 @app.post("/process")
@@ -50,9 +50,9 @@ async def process_request(input_data: ProcessRequest) -> ProcessResponse:
     
     prompt_length = encoded["input_ids"][0].size(0)
     max_returned_tokens = prompt_length + input_data.max_new_tokens
-    assert max_returned_tokens <= LLAMA2_CONTEXT_LENGTH, (
+    assert max_returned_tokens <= CONTEXT_LENGTH, (
         max_returned_tokens,
-        LLAMA2_CONTEXT_LENGTH,
+        CONTEXT_LENGTH,
     )
 
     t0 = time.perf_counter()
