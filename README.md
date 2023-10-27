@@ -1,26 +1,23 @@
-# Nips_challenge
-Project for nips challenge submission
+import json
+import pandas as pd
+import os
+from tqdm import tqdm
 
-# How to Reproduce it
+def list_dict_to_json(input,output_path):
+    df = pd.DataFrame(input)
+    df.to_json(output_path, orient='records', indent=4, force_ascii=False)
+    return
 
-1. Get data
+file_names = os.listdir('./source_data')
+dataset = []
+for file in tqdm(file_names):
+    file_path = './source_data/'+file
+    with open(file_path,'r') as f:
+        dataset += json.load(f)
 
-Get dataset through this:
-```
-cd ./data && python get_dataset.py && cd ..
-```
-
-Or you can go along the procedure of getting the dataset through:  
-```
-cd ./data/source && sh data_prepare.sh && cd ..
-```
-note: It's not recommanded to do so bacuase it will take a few hours.
-
-
-2. Train
-
-```
-git clone https://github.com/hiyouga/LLaMA-Factory.git
-cd ./LLaMA-Factory/ && git checkout 7de7174 && cd ..
-sh train.sh
-```
+print('Length of merged dataset: ',len(dataset))
+list_dict_to_json(dataset,'../dataset/merged_data.json')
+sources = [item['data_source'] for item in dataset]
+from collections import Counter
+result = Counter(sources)
+print(result)

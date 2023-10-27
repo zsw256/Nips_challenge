@@ -4,6 +4,7 @@ import json
 from tqdm import tqdm
 import torch.nn.functional as F
 import pandas as pd
+import os
 
 
 def mean_pooling(model_output, attention_mask):
@@ -68,23 +69,17 @@ def list_dict_to_json(input,output_path):
     df.to_json(output_path, orient='records', indent=4, force_ascii=False)
     return
 
-def main():
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--data_in", type=str, help="The path of dataset for deduplication.")
-    parser.add_argument("--data_ref", type=str, help="The path of standard dataset for  deduplication",default=None)
-    parser.add_argument("--data_out", type=str, help="The output path for deduplicated dataset")
-    args = parser.parse_args()
-    print(args)
+def deduplicate(data_in,data_out,data_ref):
+
 
     device = 'cuda:0'
     model_name='sentence-transformers/all-MiniLM-L6-v2'
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModel.from_pretrained(model_name,torch_dtype=torch.bfloat16).eval().to(device)
-    with open(args.data_in,'r') as f:
+    with open(data_in,'r') as f:
         dataset = json.load(f)
-    if args.data_ref is not None:
-        with open(args.data_ref,'r') as f:
+    if data_ref is not None:
+        with open(data_ref,'r') as f:
             dataset_selected = json.load(f)
     else:
         dataset_selected=dataset[:1]
@@ -105,16 +100,34 @@ def main():
 
     print('Length of merged dataset:')
     print(len(dataset_selected))
+    dataset_deduplicatd=[]
 
-    dataset_deduplicatd = [
-        {
-            'instruction':item['instruction'],
-            'input':item['input'],
-            'output':item['output'],
-            'data_source':item['data_source']
-        } for item in dataset_selected
-    ]
+    for item in dataset_selected:
+        if 'history' in item.keys():
+            dataset_deduplicatd.append({
+                'instruction':item['instruction'],
+                'input':item['input'],
+                'output':item['output'],
+                'history':item['history'],
+                'data_source':item['data_source']
+            })
+        else:
+            dataset_deduplicatd.append({
+                'instruction':item['instruction'],
+                'input':item['input'],
+                'output':item['output'],
+                'data_source':item['data_source']
+            })
+        
 
-    list_dict_to_json(dataset_deduplicatd,args.data_out)
+    list_dict_to_json(dataset_deduplicatd,data_out)
+
+def main():
+    file_names = os.listdir('./source_data')
+    print(file_names)
+    for file in file_names:
+        if 'cleaned' not in file:
+            print('Deduplicating '+file+'...')
+            deduplicate('./source_data/'+file,'./source_data/'+file,None)
 
 main()

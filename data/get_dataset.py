@@ -2,7 +2,7 @@ from datasets import load_dataset
 import pandas as pd
 import os
 
-dataset = load_dataset("Rocinante/tulu_merge")
+dataset = load_dataset("Rocinante/insturction_merge")
 print(dataset)
 
 def list_dict_to_json(input,output_path):
