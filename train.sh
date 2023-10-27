@@ -5,7 +5,7 @@ WANDB_DISABLED=True deepspeed --include localhost:0 --master_port 9090 ./LLaMA-F
     --use_fast_tokenizer True \
     --do_train \
     --dataset_dir /home/nips/Nips_challenge/data/dataset \
-    --dataset tulu_merge \
+    --dataset merge_data \
     --template default \
     --cutoff_len 2048 \
     --neft_alpha 5 \
