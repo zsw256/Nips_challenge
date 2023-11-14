@@ -7,6 +7,12 @@ Our submission is in ./submission/
 
 # How to Reproduce it
 
+## Docker way
+
+Our dockerfile for train is ./Dockerfile.train
+
+## Basic way
+
 1. Get data
 
 Get dataset through this:

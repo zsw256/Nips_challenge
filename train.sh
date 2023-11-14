@@ -4,7 +4,7 @@ WANDB_DISABLED=True deepspeed --include localhost:0 --master_port 9090 ./LLaMA-F
     --model_name_or_path Qwen/Qwen-14B \
     --use_fast_tokenizer True \
     --do_train \
-    --dataset_dir /home/nips/Nips_challenge/data/dataset \
+    --dataset_dir ./data/dataset \
     --dataset merge_data \
     --template default \
     --cutoff_len 2048 \
@@ -19,7 +19,7 @@ WANDB_DISABLED=True deepspeed --include localhost:0 --master_port 9090 ./LLaMA-F
     --gradient_accumulation_steps 8 \
     --lr_scheduler_type cosine \
     --logging_steps 10 \
-    --save_steps 20000 \
+    --save_steps 2000 \
     --warmup_ratio 0.01 \
     --learning_rate 3e-4 \
     --weight_decay 0.1 \

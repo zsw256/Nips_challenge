@@ -1,0 +1,18 @@
+FROM ghcr.io/pytorch/pytorch-nightly:c69b6e5-cu11.8.0
+
+WORKDIR /submission
+
+COPY ./requirements.txt requirements.txt
+COPY ./train.sh train.sh
+COPY ./data data
+COPY ./configs configs
+
+RUN pip install -r requirements.txt
+
+RUN cd ./data && python get_dataset.py && cd ..
+
+RUN apt-get update && apt-get install -y git
+RUN git clone https://github.com/hiyouga/LLaMA-Factory.git
+RUN cd ./LLaMA-Factory/ && git checkout 7de7174 && cd ..
+
+CMD ["sh", "train.sh"]
