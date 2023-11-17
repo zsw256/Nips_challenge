@@ -1,4 +1,4 @@
-WANDB_DISABLED=True deepspeed --include localhost:0 --master_port 9090 ./LLaMA-Factory/src/train_bash.py \
+WANDB_DISABLED=True CUDA_VISIBLE_DEVICES=0 python ./LLaMA-Factory/src/train_bash.py \
     --deepspeed ./configs/ds_config_zero2.json \
     --stage sft \
     --model_name_or_path Qwen/Qwen-14B \
